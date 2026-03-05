@@ -1,0 +1,13 @@
+{
+  "logo_url": "/static/logo.png",
+  "data": "",
+  "cliente": {
+    "nome": ""
+  },
+  "valor_extenso": "Cento e dez reais",
+  "total": "110,00",
+  "forma_pagamento": "Pix",
+  "detalhes": "",
+  "servicos": [
+  ]
+}
