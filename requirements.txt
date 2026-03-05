@@ -1,0 +1,5 @@
+Flask==2.3.3
+Flask-WTF==1.2.1
+WTForms==3.0.1
+num2words==0.5.12
+reportlab==4.0.7

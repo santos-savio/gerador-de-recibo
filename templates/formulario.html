@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Recibo - Gerador de Recibos{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-file-invoice me-2"></i>
+                    Gerar Novo Recibo
+                </h4>
+            </div>
+            
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('gerar_recibo') }}" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Data -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            {{ form.data.label(class="form-label") }}
+                            {{ form.data(class="form-control" + (" is-invalid" if form.data.errors else "")) }}
+                            {% if form.data.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.data.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Nome do Cliente -->
+                    <div class="mb-3">
+                        {{ form.cliente_nome.label(class="form-label") }}
+                        {{ form.cliente_nome(class="form-control" + (" is-invalid" if form.cliente_nome.errors else ""), placeholder="Digite o nome completo do cliente") }}
+                        {% if form.cliente_nome.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.cliente_nome.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Valor e Forma de Pagamento -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.valor.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                {{ form.valor(class="form-control" + (" is-invalid" if form.valor.errors else ""), placeholder="0,00", step="0.01") }}
+                            </div>
+                            {% if form.valor.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.valor.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            {{ form.forma_pagamento.label(class="form-label") }}
+                            {{ form.forma_pagamento(class="form-select" + (" is-invalid" if form.forma_pagamento.errors else "")) }}
+                            {% if form.forma_pagamento.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.forma_pagamento.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Serviços (Informativo) -->
+                    <div class="mb-3">
+                        <label class="form-label">Serviços Incluídos (Padrão)</label>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <ul class="mb-0">
+                                    {% for servico in form.servicos_predefinidos %}
+                                        <li>{{ servico }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <small class="text-muted">Estes serviços serão incluídos automaticamente no recibo.</small>
+                    </div>
+                    
+                    <!-- Detalhes Adicionais -->
+                    <div class="mb-4">
+                        {{ form.detalhes.label(class="form-label") }}
+                        {{ form.detalhes(class="form-control" + (" is-invalid" if form.detalhes.errors else ""), rows="3", placeholder="Descreva detalhes específicos do serviço (opcional)") }}
+                        {% if form.detalhes.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.detalhes.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Máximo 500 caracteres. Campo opcional.</div>
+                    </div>
+                    
+                    <!-- Botões -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('lista_recibos') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>
+                            Ver Recibos Anteriores
+                        </a>
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Informações Adicionais -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Informações
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-cog me-1"></i> Como funciona:</h6>
+                        <ul class="small">
+                            <li>Preencha os dados do cliente e serviço</li>
+                            <li>O sistema gera automaticamente o valor por extenso</li>
+                            <li>O recibo é salvo em formato JSON e PDF</li>
+                            <li>Número sequencial é atribuído automaticamente</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-file-pdf me-1"></i> Saída gerada:</h6>
+                        <ul class="small">
+                            <li>Arquivo PDF pronto para impressão</li>
+                            <li>Layout profissional com assinaturas</li>
+                            <li>Arquivo JSON com dados estruturados</li>
+                            <li>Histórico completo para consulta</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Formatar valor monetário
+    const valorInput = document.querySelector('#valor');
+    if (valorInput) {
+        valorInput.addEventListener('blur', function() {
+            let value = this.value.replace(',', '.');
+            if (value && !isNaN(value)) {
+                this.value = parseFloat(value).toFixed(2).replace('.', ',');
+            }
+        });
+    }
+    
+    // Data atual como padrão
+    const dataInput = document.querySelector('#data');
+    if (dataInput && !dataInput.value) {
+        const today = new Date().toISOString().split('T')[0];
+        dataInput.value = today;
+    }
+});
+</script>
+{% endblock %}

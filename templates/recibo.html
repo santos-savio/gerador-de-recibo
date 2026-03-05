@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Recibo</title>
+
+<style>
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:40px;
+    color:#222;
+}
+
+.container{
+    max-width:800px;
+    margin:auto;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.titulo{
+    font-size:42px;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+.logo{
+    width:90px;
+}
+
+.linha{
+    margin:12px 0;
+}
+
+.label{
+    font-weight:bold;
+}
+
+.valor{
+    border-bottom:1px solid #000;
+    padding-left:5px;
+}
+
+.servicos{
+    margin-top:15px;
+    margin-left:20px;
+}
+
+.servicos li{
+    margin:4px 0;
+}
+
+.detalhes{
+    margin-top:20px;
+}
+
+.total{
+    margin-top:15px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.pagamento{
+    margin-top:10px;
+}
+
+.assinaturas{
+    margin-top:80px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.assinatura{
+    width:40%;
+    text-align:center;
+}
+
+.assinatura-linha{
+    border-top:1px solid #000;
+    margin-bottom:5px;
+    height:30px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<div class="titulo">
+RECIBO
+</div>
+
+<img class="logo" src="{{ logo_url }}" alt="Logo">
+
+</div>
+
+<div class="linha">
+<span class="label">Data:</span>
+<span class="valor">{{ data }}</span>
+</div>
+
+<div class="linha">
+<span class="label">Recebi de:</span>
+<span class="valor">{{ cliente.nome }}</span>
+</div>
+
+<div class="linha">
+<span class="label">A quantia de:</span>
+<span class="valor">{{ valor_extenso }}</span>
+</div>
+
+<div class="linha">
+<span class="label">Referente a:</span>
+Serviços de Tecnologia da Informação (TI), incluindo, mas não se limitando a:
+</div>
+
+<ul class="servicos">
+{% for servico in servicos %}
+<li>{{ servico }}</li>
+{% endfor %}
+</ul>
+
+<div class="detalhes">
+<span class="label">Detalhes adicionais ou especificações:</span>
+<span class="valor">{{ detalhes }}</span>
+</div>
+
+<div class="total">
+Total: R$ {{ total }}
+</div>
+
+<div class="pagamento">
+<span class="label">Forma de pagamento:</span>
+<span class="valor">{{ forma_pagamento }}</span>
+</div>
+
+<div class="assinaturas">
+
+<div class="assinatura">
+<div class="assinatura-linha"></div>
+Assinatura do cliente
+</div>
+
+<div class="assinatura">
+<div class="assinatura-linha"></div>
+Assinatura do prestador de serviços de TI
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
