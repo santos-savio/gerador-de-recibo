@@ -99,7 +99,9 @@ body{
 RECIBO
 </div>
 
+{% if logo_url and logo_url != '/static/logo.png' %}
 <img class="logo" src="{{ logo_url }}" alt="Logo">
+{% endif %}
 
 </div>
 

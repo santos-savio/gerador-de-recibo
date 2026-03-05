@@ -19,7 +19,11 @@ csrf = CSRFProtect(app)
 # Servir arquivos estáticos
 @app.route('/static/<path:filename>')
 def static_files(filename):
-    return send_file(os.path.join('../static', filename))
+    filepath = os.path.join('../static', filename)
+    if not os.path.exists(filepath):
+        # Retornar 404 para arquivos não encontrados
+        return f"Arquivo estático não encontrado: {filename}", 404
+    return send_file(filepath)
 
 @app.route('/')
 def index():
